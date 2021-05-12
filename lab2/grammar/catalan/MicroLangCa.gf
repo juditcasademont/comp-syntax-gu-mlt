@@ -1,14 +1,88 @@
 --# -path=.:../abstract
 concrete MicroLangCa of MicroLang = open MicroResCa in {
 
+
+-----------------------------------------------------
+---------------- Grammar part -----------------------
+-----------------------------------------------------
+
 lincat
-  N = MicroResCa.N ;
-  A = MicroResCa.A ;
-  V = MicroResCa.V ;
-  V2 = MicroResCa.V2 ;
 
+  -----simple-----
+  Utt = {s : Str} ;
+  S  = {s : Str} ;
+  V = Verb ;
+  V2 = Verb2 ;
+  A = Adjective ;
+  N = Noun ;
+  Adv = {s : Str} ;
+  Comp = Adjective ;
+  AP = Adjective ;
+  CN = Noun ;
+  Prep = {s : Str} ;
 
--- lin already_Adv = mkAdv "already" ;
+  -----complex-----
+  Det = {s: Gender => Str ; n : Number } ;
+  Pron = {s : Case => Str ; g : Gender ; n: Number } ;
+  NP = {s : Case => Str ; g : Gender ; n : Number } ;
+  VP = {v : Verb ; compl : Number => Gender => Str} ;
+
+lin
+
+  -----simple-----
+  UttS s = s ;
+  UsePron p = p ;
+  UseN noun = noun ;
+  PositA a = a ;
+  CompAP ap = ap ;
+
+  -----complex-----
+
+-----determiners-----
+  ----el, la, l', els, les
+  thePl_Det = {s = table { Masc => "els" ; Fem => "les" } ; n = Pl };
+  the_Det = {s = table { Masc => pre { "a"|"e"|"i"|"o"|"u" => "l'"; _ => "el" } ;
+                         Fem => pre { "a"|"e"|"o" => "l'"; _ => "la" } } ;
+                         n = Sg };
+
+  ----un, una, uns, unes
+  a_Det = {s = table { Masc => "un" ; Fem => "una" } ; n = Sg };
+  aPl_Det = {s = table { Masc => "uns" ; Fem => "unes" } ; n = Pl };
+
+-----prepositions-----
+  --PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
+
+  in_Prep = {s = "a"} ;
+  on_Prep = {s = "en"} ;
+  with_Prep = {s = "amb"} ;
+
+-----pronouns-----
+  he_Pron = {
+    s = table {Nom => "ell" ; Acc => "el"} ;
+    n = Sg ;
+    pers = P3 ;
+    g = Masc ;
+    } ;
+
+  she_Pron = {
+    s = table {Nom => "ella" ; Acc => "la"} ;
+    n = Sg ;
+    pers = P3 ;
+    g = Fem ;
+    } ;
+
+  they_Pron = {
+    s = table {Nom => "ells" ; Acc => "els"} ;
+    n = Pl ;
+    pers = P3 ;
+    g = Masc | Fem ; ---WRONGGGGGGGGGGGGGGGGGGG
+    } ;
+
+-----------------------------------------------------
+---------------- Lexicon part -----------------------
+-----------------------------------------------------
+
+lin already_Adv = mkAdv "ja" ;
 lin animal_N = mkNBasic "animal" Masc ;
 lin apple_N = mkNFemA "poma" Fem ;
 lin baby_N = mkNBasic "bebè" Masc ;
@@ -66,7 +140,7 @@ lin man_N = mkNBasic "home" Masc ;
 lin milk_N = mkNBasic "llet" Masc ;
 lin music_N = mkNQues "música" Fem ;
 lin new_A = mkAVa "nou" ;
--- lin now_Adv = mkAdv "now" ;
+lin now_Adv = mkAdv "ara" ;
 lin old_A = mkABasic "vell" ;
 -- lin paris_PN = mkPN "Paris" ;
 lin play_V = mkV1GarV1 "jugar" ;
@@ -96,5 +170,6 @@ lin wine_N = mkNVi "vi" Masc ;
 lin woman_N = mkNFemA "dona" Fem ;
 lin yellow_A = mkAOc "groc" ;
 lin young_A = mkASame "jove" ;
+
 
 }

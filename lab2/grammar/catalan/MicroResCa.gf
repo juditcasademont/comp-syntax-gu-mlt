@@ -109,6 +109,7 @@ oper
 
   --- transitive verbs
   Verb2 = {s : VForm => Str} ;
+  --Verb2 : Type = Verb ** {c : Str} ;
 
   --- intransitive verbs
   Verb = {s : VForm => Str} ;
@@ -124,6 +125,7 @@ oper
       VPresInd P2 Pl => p2p ;
       VPresInd P3 Pl => p3p
       } ;
+    --c = []
     } ;
 
   mkV : (inf,p1s,p2s,p3s,p1p,p2p,p3p : Str) -> Verb
@@ -163,6 +165,8 @@ oper
   mkV1GarV1 : Str -> Verb = \inf -> case inf of {
     ju + "gar" => mkV inf (ju + "go") (ju + "gues") (ju + "ga") (ju + "guem") (ju + "gueu") (ju + "guen")
   } ;
+
+  be_Verb : Verb = mkV "ser" "sóc" "ets" "és" "som" "sou" "son" ; 
 
 
   -------ADVERBS-------

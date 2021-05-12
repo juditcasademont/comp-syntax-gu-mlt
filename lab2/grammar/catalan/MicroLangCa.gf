@@ -23,20 +23,60 @@ lincat
 
   -----complex-----
   Det = {s: Gender => Str ; n : Number } ;
-  Pron = {s : Case => Str ; g : Gender ; n: Number } ;
-  NP = {s : Case => Str ; g : Gender ; n : Number } ;
-  VP = {v : Verb ; compl : Number => Gender => Str} ;
+  Pron = {s : Case => Str ; g : Gender ; n: Number ; p : Person } ;
+  NP = {s : Case => Str ; g : Gender ; n : Number ; p : Person} ;
+  VP = {verb : VForm => Str ; compl : Str} ;
+
 
 lin
 
   -----simple-----
   UttS s = s ;
-  UsePron p = p ;
-  UseN noun = noun ;
+  UsePron p = p ; -- es un np
+  UseN n = n ;
   PositA a = a ;
   CompAP ap = ap ;
 
   -----complex-----
+  UttNP np = {s = np.s ! Acc} ;
+
+  PredVPS np vp = {
+    s = np.s ! Nom ++ vp.verb.s ! np.n ! np.p ++ vp.compl ! np.n ! np.g
+  } ;
+  --ERROR MESSAGE
+  --record type expected for: vp.verb
+  --instead of the inferred: VForm => Str
+
+  UseV v = {verb = v.s ; compl = [] ; adv = []} ;
+  
+  ComplV2 v2 np = {
+    verb = v2.s ; compl = np.s ! Acc
+  } ;
+
+  --UseComp comp = {
+    --verb = be_Verb ;
+    --compl = comp.s ! NAgr g n } ;
+
+  PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
+
+  AdvVP vp adv = vp ** {compl = \\n,g => vp.compl ! NAgr g n ++ adv.s} ;
+  --ERROR MESSAGE
+  --table type expected for table instead of
+  --Str
+
+  AdjCN ap cn = {
+    s = table { Sg => cn.s ! Sg ++ ap.s ! NAgr cn.g Sg ;
+                Pl => cn.s ! Pl ++ ap.s ! NAgr cn.g Pl} ;
+                g = cn.g
+              };
+
+   DetCN det cn = {
+    s = table {_ => det.s ! cn.g ++ cn.s ! det.n }; 
+    g = cn.g ;
+    n = det.n ;
+    p = P3 ;
+   };
+
 
 -----determiners-----
   ----el, la, l', els, les
@@ -50,8 +90,6 @@ lin
   aPl_Det = {s = table { Masc => "uns" ; Fem => "unes" } ; n = Pl };
 
 -----prepositions-----
-  --PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
-
   in_Prep = {s = "a"} ;
   on_Prep = {s = "en"} ;
   with_Prep = {s = "amb"} ;
@@ -60,21 +98,21 @@ lin
   he_Pron = {
     s = table {Nom => "ell" ; Acc => "el"} ;
     n = Sg ;
-    pers = P3 ;
+    p = P3 ;
     g = Masc ;
     } ;
 
   she_Pron = {
     s = table {Nom => "ella" ; Acc => "la"} ;
     n = Sg ;
-    pers = P3 ;
+    p = P3 ;
     g = Fem ;
     } ;
 
   they_Pron = {
     s = table {Nom => "ells" ; Acc => "els"} ;
     n = Pl ;
-    pers = P3 ;
+    p = P3 ;
     g = Masc | Fem ; ---WRONGGGGGGGGGGGGGGGGGGG
     } ;
 

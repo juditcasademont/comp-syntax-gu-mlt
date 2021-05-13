@@ -32,7 +32,7 @@ lin
 
   -----simple-----
   UttS s = s ;
-  UsePron p = p ; -- es un np
+  UsePron p = p ; -- == np
   UseN n = n ;
   PositA a = a ;
   CompAP ap = ap ;
@@ -40,14 +40,9 @@ lin
   -----complex-----
   UttNP np = {s = np.s ! Acc} ;
 
-  PredVPS np vp = {
-    s = np.s ! Nom ++ vp.verb.s ! np.n ! np.p ++ vp.compl ! np.n ! np.g
-  } ;
-  --ERROR MESSAGE
-  --record type expected for: vp.verb
-  --instead of the inferred: VForm => Str
+  PredVPS np vp = {s = np.s ! Nom ++ vp.verb ! VPresInd np.p np.n ++ vp.compl } ;
 
-  UseV v = {verb = v.s ; compl = [] ; adv = []} ;
+  UseV v = {verb = v.s ; compl = [] } ;
   
   ComplV2 v2 np = {
     verb = v2.s ; compl = np.s ! Acc
@@ -59,10 +54,7 @@ lin
 
   PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
 
-  AdvVP vp adv = vp ** {compl = \\n,g => vp.compl ! NAgr g n ++ adv.s} ;
-  --ERROR MESSAGE
-  --table type expected for table instead of
-  --Str
+  AdvVP vp adv = {verb = vp.verb; compl = vp.compl ++ adv.s } ;
 
   AdjCN ap cn = {
     s = table { Sg => cn.s ! Sg ++ ap.s ! NAgr cn.g Sg ;

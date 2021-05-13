@@ -25,7 +25,7 @@ lincat
   Det = {s: Gender => Str ; n : Number } ;
   Pron = {s : Case => Str ; g : Gender ; n: Number ; p : Person } ;
   NP = {s : Case => Str ; g : Gender ; n : Number ; p : Person} ;
-  VP = {verb : VForm => Str ; compl : Str} ;
+  VP = {verb : VForm => Str ; compl : Number => Gender => Str} ;
 
 
 lin
@@ -40,21 +40,21 @@ lin
   -----complex-----
   UttNP np = {s = np.s ! Acc} ;
 
-  PredVPS np vp = {s = np.s ! Nom ++ vp.verb ! VPresInd np.p np.n ++ vp.compl } ;
+  PredVPS np vp = {s = np.s ! Nom ++ vp.verb ! VPresInd np.p np.n ++ vp.compl ! np.n ! np.g };
 
-  UseV v = {verb = v.s ; compl = [] } ;
+  UseV v = {verb = v.s ; compl = \\n,g => []};
   
   ComplV2 v2 np = {
-    verb = v2.s ; compl = np.s ! Acc
+    verb = v2.s ; compl = \\n,g => np.s ! Acc
   } ;
 
-  --UseComp comp = {
-    --verb = be_Verb ;
-    --compl = comp.s ! NAgr g n } ;
+  UseComp comp = {
+    verb = be_Verb.s ;
+    compl = \\n, g => comp.s ! NAgr g n } ;
 
   PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
 
-  AdvVP vp adv = {verb = vp.verb; compl = vp.compl ++ adv.s } ;
+  AdvVP vp adv = {verb = vp.verb; compl = \\n,g => vp.compl ! n ! g ++ adv.s };
 
   AdjCN ap cn = {
     s = table { Sg => cn.s ! Sg ++ ap.s ! NAgr cn.g Sg ;

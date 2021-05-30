@@ -4,6 +4,10 @@ WHAT'S WRONG WITH MY DOCTOR
 	- l' &+ : how can I get rid of the &+ ??
 	- l' &+ metge : bad because l' only goes with vowels
 	- wrong form when imperative : vesteix &+ et should be vesteix-te
+		-> in ExtraCat.gf in the rgl, the only available pronouns are
+		"tu" "et" "et" "tu" (so, we're missing '-te', which is used
+		when the pronoun is used after the verb -for imperatives-,
+		therefore the Doctor won't work perfectly)
 
 2. ser/estar
 	- should be made with estar but aren't:
